@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,15 +86,31 @@ namespace WpfApp4
             ObservableCollection<SeismicConditionN> seismicConditionsN = new ObservableCollection<SeismicConditionN>();
             try
             {
+                byte[] image = LoadImage();
                 for (int i = 1; i < 6; i++)
                 {
-                    seismicConditionsN.Add(new SeismicConditionN { Name = "A" + i, Value = i });
+                    seismicConditionsN.Add(new SeismicConditionN { Name = "A" + i, Value = i,Image = image });
                 }
             }
             catch (Exception ex)
             {
             }
             return seismicConditionsN;
+        }
+
+        public static byte[] LoadImage()
+        {
+            string path = string.Empty;
+            path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Locati‌​on);
+
+            byte[] bytes;
+            Image myImg = System.Drawing.Image.FromFile(path + "\\Images\\Placeholder.png");
+            using (MemoryStream ms = new MemoryStream())
+            {
+                myImg.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                bytes = ms.ToArray();
+            }
+            return bytes;
         }
 
         #region INotifyPropertyChanged
